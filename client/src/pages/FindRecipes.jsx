@@ -7,6 +7,11 @@ import {
 
 import { listRecipes, listIngredients } from "../api";
 import DemoNotice from "../components/DemoNotice.jsx";
+import ChallengePanel from "../components/cooking/ChallengePanel.jsx";
+import CookingJournal from "../components/cooking/CookingJournal.jsx";
+import RecipeCookLog from "../components/cooking/RecipeCookLog.jsx";
+import useCookingJournal from "../hooks/useCookingJournal.js";
+import "../cooking.css";
 
 const QUICK_PICKS = [
   ["chicken", "Manok"],
@@ -21,7 +26,7 @@ const titleCase = (value) =>
   value.replace(/\b\w/g, (letter) => letter.toUpperCase());
 const displayName = (recipe) => recipe.filipino_name || recipe.name;
 
-function RecipeDialog({ recipe, selected, onDismiss }) {
+function RecipeDialog({ recipe, selected, onDismiss, onSaveCooked }) {
   const dialogRef = useRef(null);
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -108,11 +113,13 @@ function RecipeDialog({ recipe, selected, onDismiss }) {
         Source: {recipe.source.title}, pp.{" "}
         {recipe.source.printed_pages.join("–")}.
       </p>
+      <RecipeCookLog recipe={recipe} onSave={onSaveCooked} />
     </dialog>
   );
 }
 
 export default function FindRecipes() {
+  const journal = useCookingJournal();
   const [recipes, setRecipes] = useState([]);
   const [vocabulary, setVocabulary] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -221,9 +228,14 @@ export default function FindRecipes() {
             </span>{" "}
             Pantry<span>Pal</span>
           </a>
-          <a className="header-link" href="#finder">
-            Find recipes <span aria-hidden="true">↗</span>
-          </a>
+          <nav className="pantry-nav" aria-label="Main navigation">
+            <a className="header-link" href="#finder">
+              Find recipes
+            </a>
+            <a className="header-link journal-nav-link" href="#journal">
+              My journal
+            </a>
+          </nav>
         </div>
       </header>
       <main id="top">
@@ -423,6 +435,13 @@ export default function FindRecipes() {
               </div>
             </section>
 
+            <ChallengePanel
+              results={results}
+              selected={selected}
+              category={category}
+              onOpen={setOpenedRecipe}
+            />
+
             <section
               className="results"
               ref={resultsRef}
@@ -561,6 +580,7 @@ export default function FindRecipes() {
             </section>
           </>
         )}
+        <CookingJournal journal={journal} />
       </main>
       <footer className="site-footer">
         <span className="brand">
@@ -571,8 +591,10 @@ export default function FindRecipes() {
       </footer>
       {openedRecipe && (
         <RecipeDialog
+          key={openedRecipe.id}
           recipe={openedRecipe}
           selected={selected}
+          onSaveCooked={journal.addEntry}
           onDismiss={() => setOpenedRecipe(null)}
         />
       )}

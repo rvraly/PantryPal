@@ -243,7 +243,7 @@ In live mode, React requests recipes and ingredients from Express. Express queri
 
 ## Author
 
-[rvraly](https://github.com/rvraly) — Final project for 6APSI, Holy Angel University.
+[rvraly](https://github.com/rvraly) — Final project for 6APSI, CS - 402.
 
 ## License
 
