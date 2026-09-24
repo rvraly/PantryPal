@@ -65,7 +65,7 @@ export default function CookingJournal({ journal }) {
         <span className="journal-count">{entries.length} {entries.length === 1 ? "memory" : "memories"}</span>
       </div>
       <p className="journal-description">Your dishes, your little discoveries, your next-time notes.</p>
-      <p className="journal-help journal-storage-note">Saved only in this browser on this device. Clearing site data removes your journal; private browsing may erase it when you close the session.</p>
+      <p className="journal-help journal-storage-note">Saved on this device. Your cooking journal stays after refreshing, but clearing browser data will remove it.</p>
       {journal.error && <div className="journal-error" role="alert">
         <p>{journal.error}</p>
         <button type="button" className="journal-secondary" onClick={journal.refresh}>Reload journal</button>
