@@ -1,40 +1,34 @@
-// The real client. Every function here talks to YOUR Express API.
-//
-// This is the file that matters for your finals project. mockApi.js exists so
-// you can build the interface before this has anywhere to point.
+// Contract for the upcoming PantryPal Express routes.
+// Keep demo mode enabled until those routes and the database are connected.
+const BASE = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/+$/, '')
 
-const BASE = import.meta.env.VITE_API_BASE_URL || ''
-
-async function request(path, options) {
+async function request(path, { signal } = {}) {
   const response = await fetch(`${BASE}${path}`, {
-    headers: { 'Content-Type': 'application/json' },
-    ...options,
+    signal,
+    headers: { Accept: 'application/json' },
   })
-
   if (!response.ok) {
-    // Try to use the API's own message; fall back to the status line.
-    let message = `${response.status} ${response.statusText}`
-    try {
-      const body = await response.json()
-      if (body?.error) message = body.error
-    } catch {
-      // The body was not JSON. The status line is all we have.
-    }
-    throw new Error(message)
+    throw new Error(`Recipe request failed (${response.status}).`)
   }
-
-  return response.status === 204 ? null : response.json()
+  return response.json()
 }
 
-export const listSightings = () => request('/api/sightings')
+export async function listRecipes(options) {
+  const body = await request('/api/recipes', options)
+  if (!Array.isArray(body.recipes)) throw new Error('Invalid recipe response.')
+  return body.recipes
+}
 
-export const getSighting = (id) => request(`/api/sightings/${id}`)
+export async function listIngredients(options) {
+  const body = await request('/api/ingredients', options)
+  if (!Array.isArray(body.ingredients)) throw new Error('Invalid ingredient response.')
+  return body.ingredients
+}
 
-export const createSighting = (input) =>
-  request('/api/sightings', { method: 'POST', body: JSON.stringify(input) })
-
-export const updateSighting = (id, input) =>
-  request(`/api/sightings/${id}`, { method: 'PUT', body: JSON.stringify(input) })
-
-export const deleteSighting = (id) =>
-  request(`/api/sightings/${id}`, { method: 'DELETE' })
+export async function getRecipe(id, options) {
+  const body = await request(`/api/recipes/${encodeURIComponent(id)}`, options)
+  if (!body.recipe || typeof body.recipe !== 'object' || Array.isArray(body.recipe)) {
+    throw new Error('Invalid recipe response.')
+  }
+  return body.recipe
+}

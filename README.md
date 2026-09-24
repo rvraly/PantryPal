@@ -1,156 +1,252 @@
-# Your Project Name
+# PantryPal: Ingredient-Based Recipe Finder
 
-> **Replace this whole file.** It is a worked example of the README your project
-> will be graded from, not a file to leave as it is. Start with
-> [START-HERE.md](START-HERE.md).
+PantryPal is a responsive web app for home cooks who want to find Filipino recipes using ingredients they already have. It helps users decide what to cook and see which ingredients they still need.
 
-One sentence saying what this does and who it is for.
+The current collection contains **100 recipes and 193 searchable ingredients**. The Express backend has been connected locally to the Supabase database, with those record counts confirmed by the database health check. Public deployment is not yet complete.
 
-**Live site:** https://yourusername.github.io/your-repo-name/
-**API:** https://your-api.onrender.com/healthz
-**Demo video:** (link)
+**Live site:** Deployment pending.  
+**API:** Public deployment pending. Local address: `http://localhost:3000`.  
+**Demo video:** To be added.
 
-> **This deployment is running in demo mode.** The interface is real; the backend
-> is simulated in your browser so the site works without a server. See
-> [Demo mode](#demo-mode) below. Delete this quote once your API is live.
-
-![A screenshot of the main screen](docs/assets/screenshot.png)
+> **Current progress:** The Express backend connects to Supabase and reads 100 recipes and 193 ingredients. The frontend supports both demo mode and live database mode. A working local connection does not mean the app has been deployed publicly.
 
 ## What it does
 
-- Report a sighting with a place, a description and a spookiness rating
-- Browse everything reported, newest first
-- Delete a report
+- Search for ingredients using English or Filipino names.
+- Add ingredients through suggestions, common picks, and pantry basics checkboxes.
+- Rank recipes by ingredient matches and show missing ingredient groups.
+- Filter results by category.
+- View ingredient quantities, instructions, preparation and cooking details, and cookbook tips.
+- Use **Surprise me!** to choose a recipe from complete matches or the highest-ranked results.
+- Browse on desktop or mobile without an account.
+
+### How to use it
+
+1. Open the app and add the ingredients you have.
+2. Select only the pantry basics available in your kitchen.
+3. Click **Find recipes** to scroll to the results. Results update as ingredients change.
+4. Choose a category if you want to narrow the results.
+5. Check the matched and missing ingredients, then click **View recipe**.
+6. Remove an ingredient chip or select **Clear all** to change your selection. Use **Show more recipes** to see additional results.
+
+### Screenshots
+
+See [system screenshots](docs/assets/) for images of PantryPal in use.
 
 ## Built with
 
-React and Vite on the front end, Express and PostgreSQL on the back end. The
-client is on GitHub Pages, the API on (host), the database on (host).
+| Part             | Technology                    |
+| ---------------- | ----------------------------- |
+| Frontend         | React and Vite                |
+| Backend          | Node.js and Express           |
+| Database         | PostgreSQL hosted on Supabase |
+| Database queries | `pg` (node-postgres)          |
+
+The recipe collection was prepared from _The Easy Filipino Cookbook_. Recipe details retain source references.
 
 ## Demo mode
 
-This repository can run two ways, chosen by one environment variable at **build**
-time.
+The frontend supports two data sources, selected by `VITE_USE_MOCK_API` in `client/.env`.
 
-**Demo mode is the default.** Only the exact string `false` turns it off, so a
-forgotten or mistyped variable leaves you on the simulated backend with a visible
-notice rather than on a silently broken build.
+| Setting                           | Behavior                                                                              |
+| --------------------------------- | ------------------------------------------------------------------------------------- |
+| `false`                           | Requests recipes and ingredients from Express, which reads Supabase PostgreSQL.       |
+| `true`, unset, or any other value | Loads the bundled collection from `client/src/api/seed.json` and shows a demo notice. |
 
-| `VITE_USE_MOCK_API` | What happens |
-| --- | --- |
-| unset, or `true` | The client answers its own requests from `localStorage`. No server, no database, nothing shared between visitors. This is what the template ships with, so the GitHub Pages link works on day one. |
-| `false` | The client calls the Express API at `VITE_API_BASE_URL`, which reads and writes real PostgreSQL. |
+Demo mode does not require a running backend. It uses read-only bundled data, not `localStorage`. Ingredient selections reset after a page refresh in both modes. Live mode does not automatically switch to demo data when a request fails.
 
-**Demo mode is a starting point and a fallback, not a finished project.** Your
-finals submission is all three pieces deployed and talking to each other. Demo
-mode is there so you can build the interface in week one before the API exists,
-and so you have something to show if a free tier is asleep during your demo.
-
-GitHub Pages serves files and cannot run Node, so the API and the database can
-never live there. They go somewhere else:
-
-| Piece | Options |
-| --- | --- |
-| **API** | Render, Railway, Fly.io, Koyeb, a VPS, or [self-hosted behind a tunnel](../content/extending-your-app/11-self-hosting.md) |
-| **Database** | Neon, Supabase, Railway, Aiven, or your own PostgreSQL |
-
-`content/extending-your-app/` in your course workspace walks through all of it.
-Page 10 is the decision page if you do not know which to pick.
+Restart the frontend after changing its environment settings. For a deployed frontend, these settings are applied during the build.
 
 ## Running it yourself
 
-**The client only, in demo mode.** No database needed.
+The following instructions use **Windows PowerShell** and run the app locally with Supabase data.
 
-    cd client
-    npm install
-    cp .env.example .env        # VITE_USE_MOCK_API stays true
-    npm run dev                 # http://localhost:5173
+### 1. Install the requirements and get the code
 
-**The whole stack.** Needs a PostgreSQL, either local or hosted.
+Install **Node.js 24.x with npm**, **Git**, and a code editor such as VS Code. You also need a Supabase project and an internet connection.
 
-    # 1. the database
-    docker run --name my-pg -e POSTGRES_PASSWORD=devpassword \
-      -e POSTGRES_DB=haunted -p 5432:5432 -d postgres:17
+```powershell
+git clone https://github.com/rvraly/PantryPal.git
+cd PantryPal
+```
 
-    # 2. the API
-    cd server
-    npm install
-    cp .env.example .env        # check DATABASE_URL
-    npm run db:reset            # creates the tables and adds sample rows
-    npm run dev                 # http://localhost:3000
+Run the remaining steps from this project folder. If you already have the project in `C:\Projects\pantrypal-template`, use that folder instead of cloning another copy.
 
-    # 3. the client, in another terminal
-    cd client
-    npm install
-    cp .env.example .env
-    # set VITE_USE_MOCK_API=false
-    npm run dev
+### 2. Install the backend dependencies
 
-Check the API on its own before you blame the client:
+From the project root:
 
-    curl http://localhost:3000/healthz     # is the process alive
-    curl http://localhost:3000/readyz      # is the database reachable
-    curl http://localhost:3000/api/sightings
+```powershell
+cd server
+npm ci
+```
+
+### 3. Configure the database connection
+
+In your Supabase project's **Connect** dialog, copy the **Session pooler PostgreSQL connection string** and enter your database password in its password field. Use the database password, not an API key. Reserved characters in the password must be percent-encoded; for example, `@` becomes `%40`.
+
+Create `server/.env`. On its first line, type `DATABASE_URL=` immediately followed by your complete connection string. Keep the value on that same line.
+
+Add these lines underneath:
+
+```dotenv
+CORS_ORIGINS=http://localhost:5173,http://127.0.0.1:5173
+NODE_ENV=development
+DATABASE_CA_CERT=./supabase-ca.crt
+```
+
+Download the server root certificate from **Database Settings → SSL Configuration** in Supabase. Save it as `server/supabase-ca.crt`. This setup uses the certificate to verify the database connection and resolves the `SELF_SIGNED_CERT_IN_CHAIN` error encountered during development.
+
+Keep `.env`, `package.json`, `app.js`, and `server.js` directly inside the same `server` folder. The environment filename must be `.env`, not `.env.txt`. Keep real credentials out of Git and the README.
+
+### 4. Create and seed the tables
+
+**Skip this step if your database already contains PantryPal's 100 recipes and 193 ingredients.**
+
+For a new Supabase database, run from `server` after configuring the connection:
+
+```powershell
+npm run db:reset
+```
+
+This runs `server/db/schema.sql` followed by `server/db/seed.sql`. The PantryPal scripts create missing tables and insert the recipe and ingredient collection. They do not truncate existing tables, and rows with existing IDs are left unchanged. They are intended for the PantryPal schema on Supabase and do not migrate an incompatible schema.
+
+Alternatively, run `schema.sql` and then `seed.sql` in the Supabase SQL Editor.
+
+### 5. Start the backend
+
+From `server`:
+
+```powershell
+npm run dev
+```
+
+Open [the database health check](http://localhost:3000/readyz). With the supplied collection loaded, the expected response is:
+
+```json
+{
+  "ok": true,
+  "db": "up",
+  "recipes": 100,
+  "ingredients": 193
+}
+```
+
+Keep this terminal running. This response confirms the backend can read the database; the frontend also needs the live-mode configuration below.
+
+### 6. Configure and start the frontend
+
+Open a second terminal at the project root:
+
+```powershell
+cd client
+npm ci
+```
+
+Create `client/.env` with:
+
+```dotenv
+VITE_USE_MOCK_API=false
+VITE_API_BASE_URL=http://localhost:3000
+```
+
+Start the frontend:
+
+```powershell
+npm run dev -- --port 5173 --strictPort
+```
+
+Open [PantryPal locally](http://localhost:5173). The ingredient selector and recipe collection should appear without the demo notice. Keep both terminals running while using the app.
+
+After changing either `.env` file, stop the corresponding server with **Ctrl + C** and restart it.
+
+### API usage
+
+The API runs locally at `http://localhost:3000` and is read-only.
+
+| Method | Path               | Purpose                                                                     |
+| ------ | ------------------ | --------------------------------------------------------------------------- |
+| GET    | `/`                | Shows the API running message and health-check paths.                       |
+| GET    | `/healthz`         | Checks whether the API process is running.                                  |
+| GET    | `/readyz`          | Checks database access and returns recipe and ingredient counts.            |
+| GET    | `/api/recipes`     | Returns `{ recipes, total }`. Supports optional `q` and `category` filters. |
+| GET    | `/api/recipes/:id` | Returns `{ recipe }` for one recipe. An unknown ID returns 404.             |
+| GET    | `/api/ingredients` | Returns `{ ingredients, total }`. Optional `q` searches names and aliases.  |
+
+Examples you can open in a browser:
+
+- [Search recipes for adobo](http://localhost:3000/api/recipes?q=adobo)
+- [Search ingredients for bawang](http://localhost:3000/api/ingredients?q=bawang)
+- [Read recipe 1](http://localhost:3000/api/recipes/1)
 
 ## Environment variables
 
-None of these are committed. `.env.example` in each folder lists them with
-placeholder values.
+| Variable            | Location                   | Value or purpose                                                                       |
+| ------------------- | -------------------------- | -------------------------------------------------------------------------------------- |
+| `DATABASE_URL`      | `server/.env`              | Your complete Supabase Session pooler PostgreSQL URI, including the database password. |
+| `DATABASE_CA_CERT`  | `server/.env`              | `./supabase-ca.crt` for the certificate used by this setup.                            |
+| `CORS_ORIGINS`      | `server/.env`              | `http://localhost:5173,http://127.0.0.1:5173`                                          |
+| `NODE_ENV`          | Server environment         | `development` locally; `production` for deployment.                                    |
+| `PORT`              | Server environment         | Defaults to `3000` locally; supplied by the API host when deployed.                    |
+| `VITE_USE_MOCK_API` | `client/.env`              | `false` for database mode; `true` for the bundled demo.                                |
+| `VITE_API_BASE_URL` | `client/.env`              | `http://localhost:3000` for local development.                                         |
+| `VITE_BASE_PATH`    | Frontend build environment | Defaults to `/`; the Pages workflow supplies the repository path for deployment.       |
 
-| Name | Where | What it is |
-| --- | --- | --- |
-| `DATABASE_URL` | server | PostgreSQL connection string. Contains a password |
-| `CORS_ORIGINS` | server | comma-separated origins allowed to call the API |
-| `NODE_ENV` | server | `production` on your host |
-| `PORT` | server | **set by the host**, do not set it yourself |
-| `VITE_USE_MOCK_API` | client, at build time | only `false` turns demo mode off; unset means on |
-| `VITE_API_BASE_URL` | client, at build time | your API's public URL, no trailing slash |
-
-Every `VITE_` value is compiled into the built JavaScript and is **public**.
-Never put a key, a password or a connection string in one.
+All `VITE_` values become public frontend configuration. Database credentials belong only in the backend environment. Keep actual `.env` files ignored by Git; example files must not contain real credentials.
 
 ## Deploying
 
-**Client, to GitHub Pages.** Already wired up in
-`.github/workflows/deploy-pages.yml`. Two one-time steps:
+The frontend and Express API currently run locally. Supabase already hosts the database. A public frontend and API deployment remain part of the next steps.
 
-1. **Settings > Pages > Build and deployment > Source: GitHub Actions.** Without
-   this the workflow goes green and publishes nothing.
-2. Nothing else, until your API is live. Demo mode is the default, so the first
-   deploy works on its own. When the API is up, add `VITE_USE_MOCK_API` = `false`
-   and `VITE_API_BASE_URL` under **Settings > Secrets and variables > Actions >
-   Variables**, then re-run the workflow.
-
-The repository must be **public** for Pages to serve it on a free account.
-
-**API and database.** Not automated here, because most hosts deploy straight from
-your repository with no workflow at all. Point your host at the `server/` folder,
-set the environment variables in its dashboard, and run `server/db/schema.sql`
-once against the hosted database.
+The repository includes the template's GitHub Pages workflow for the frontend. Express requires a separate Node.js host. The public frontend will need the deployed API URL, and the API's CORS configuration must allow the frontend's origin. Local addresses cannot be used by visitors to the public site.
 
 ## Project structure
 
-    client/          React front end, built by Vite
-      src/api/       ONE interface, two implementations, chosen by a variable
-      src/components/
-    server/          Express API
-      db/            pool, schema.sql, seed.sql, and a runner for them
-    compose.yml      only if you self-host
-    docs/            your planning documents and weekly reports
+| Path                                    | Purpose                                                                |
+| --------------------------------------- | ---------------------------------------------------------------------- |
+| `client/src/App.jsx`                    | Renders the recipe finder.                                             |
+| `client/src/pages/FindRecipes.jsx`      | Ingredient selection, results, and recipe details.                     |
+| `client/src/services/recipeMatching.js` | Ingredient suggestions and recipe ranking.                             |
+| `client/src/api/index.js`               | Selects the demo or HTTP implementation.                               |
+| `client/src/api/mockApi.js`             | Reads the bundled collection.                                          |
+| `client/src/api/httpApi.js`             | Requests data from Express.                                            |
+| `client/src/api/seed.json`              | Demo recipes and ingredients.                                          |
+| `client/src/components/DemoNotice.jsx`  | Displays the demo notice.                                              |
+| `client/src/styles.css`                 | Responsive interface styles.                                           |
+| `server/server.js`                      | Starts the Express server.                                             |
+| `server/app.js`                         | Routes, validation, and HTTP responses.                                |
+| `server/recipesRepo.js`                 | Parameterized database queries.                                        |
+| `server/db/`                            | Database configuration, connection pool, schema, seed, and SQL runner. |
+| `.github/workflows/deploy-pages.yml`    | Frontend deployment workflow.                                          |
+| `docs/`                                 | Supporting documentation and screenshot assets.                        |
+| `README.md`                             | Setup, usage, and project documentation.                               |
 
 ## Architecture
 
-Three or four sentences, or a small diagram. Which piece talks to which, and
-where each one is hosted.
+In live mode, React requests recipes and ingredients from Express. Express queries Supabase PostgreSQL through the `pg` connection pool, with SQL kept in `recipesRepo.js`. React ranks recipes in the browser using the selected ingredients. In demo mode, the same frontend API interface returns bundled data without contacting the backend.
 
 ## What I would do next
 
-Three honest bullets. This paragraph is worth more than it looks.
+- Add a PantryPal logo and refine the interface.
+- Add favorites and personal notes; consider optional photos for saved recipes.
+- Test recipe matching and mobile usability further, deploy the frontend and API, and record the final demonstration.
+
+### Known limitations and troubleshooting
+
+- Matching checks ingredient names, not quantities or exact cuts. Users must check each recipe's amounts and preparation requirements.
+- Recipes containing alternatives or subrecipes need further matching review.
+- Favorites, personal notes, and photo uploads are not implemented. Ingredient selections are not saved after refresh.
+- If Node reports `.env: not found`, check that the file is saved directly in `server` and run the command from that folder.
+- If the database check fails, check the connection string, database password, certificate path, and table setup. Certificate verification must remain enabled.
+- If the demo notice remains visible, set `VITE_USE_MOCK_API=false` in `client/.env` and restart Vite.
+- If port 5173 is already in use, stop the other frontend process before restarting.
 
 ## Author
 
-Your name, and a link. Course and section.
+[rvraly](https://github.com/rvraly) — Final project for 6APSI, Holy Angel University.
 
-## Licence
+## License
 
-MIT, see [LICENSE](LICENSE). Put your own name in it.
+The project code uses the MIT licence; see [LICENSE](LICENSE).
+
+The recipe dataset contains material extracted from _The Easy Filipino Cookbook_. Source references are retained. Redistribution permission has not been established; the code's MIT licence does not cover the third-party cookbook material.

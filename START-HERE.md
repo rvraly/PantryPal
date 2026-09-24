@@ -132,15 +132,15 @@ One new thing at a time. Working, committed, deployed, then the next one.
 
 ## Things that will catch you
 
-| Symptom | Cause |
-| --- | --- |
-| Blank white page on Pages, 404s on the JavaScript | the base path. The workflow sets it; do not hardcode it |
-| Refreshing a nested route gives 404 | `404.html`. The build already copies it; do not remove that step |
-| Live site still shows demo data after deploying the API | you changed a variable but did not **rebuild** |
-| `CORS policy` in the console | `CORS_ORIGINS` on the API does not name your Pages origin exactly. An origin has no path and no trailing slash |
-| First request takes 45 seconds | your free-tier API was asleep. Expected. Say so in the interface |
-| `DATABASE_URL is not set` | you set it locally and not in the host's dashboard |
-| Deploy fails on an import that obviously exists | capitalisation. The runner is Linux and your laptop probably is not |
+| Symptom                                                 | Cause                                                                                                          |
+| ------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| Blank white page on Pages, 404s on the JavaScript       | the base path. The workflow sets it; do not hardcode it                                                        |
+| Refreshing a nested route gives 404                     | `404.html`. The build already copies it; do not remove that step                                               |
+| Live site still shows demo data after deploying the API | you changed a variable but did not **rebuild**                                                                 |
+| `CORS policy` in the console                            | `CORS_ORIGINS` on the API does not name your Pages origin exactly. An origin has no path and no trailing slash |
+| First request takes 45 seconds                          | your free-tier API was asleep. Expected. Say so in the interface                                               |
+| `DATABASE_URL is not set`                               | you set it locally and not in the host's dashboard                                                             |
+| Deploy fails on an import that obviously exists         | capitalisation. The runner is Linux and your laptop probably is not                                            |
 
 ## The one rule
 
