@@ -192,14 +192,14 @@ The local Express API is read-only and runs at `http://localhost:3000`.
 
 ## 7. Known issues and next steps
 
-- The Express API is not publicly deployed, so the live GitHub Pages site currently uses demo data.
-- Ingredient matching checks ingredient names, not exact amounts or cuts.
-- Ingredient selections are not saved after refreshing.
-- Cooking-journal entries are limited to the current browser and device.
+- The Express API is not publicly deployed, so the live GitHub Pages site currently uses bundled demo data.
+- Ingredient matching compares ingredient names but does not check exact amounts, measurements, or cuts.
+- Selected ingredients are cleared when the page is refreshed.
+- Cooking-journal entries are stored only in the current browser and device. Clearing browser data removes them.
 - Supabase Row Level Security and a least-privileged database role still need final verification.
 - GitHub Actions dependencies still need to be pinned to complete commit SHAs.
-- The cookbook material and other assets still need a final permission and credit review.
-- Future improvements may include a PantryPal logo, journal export/import, and optional cooking photos.
+- The cookbook material, fonts, and other third-party assets still need a final permission and credit review.
+- Future improvements may include journal export and import, optional cooking photos, and database-backed journal synchronization.
 
 ## AI usage
 
