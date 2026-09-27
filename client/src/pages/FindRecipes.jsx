@@ -583,7 +583,6 @@ export default function FindRecipes() {
         <span className="brand">
           Pantry<span>Pal</span>
         </span>
-        <p>A little less waste. A little more sarap.</p>
         <span>MADE FOR EVERYDAY COOKING</span>
       </footer>
       {openedRecipe && (
