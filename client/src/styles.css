@@ -115,18 +115,7 @@ main {
 .brand > span:last-child {
   color: #b85d30;
 }
-.brand-icon {
-  display: inline-grid;
-  place-items: center;
-  border: 1px solid #bbcbb1;
-  border-radius: 12px;
-  background: #e9edde;
-  color: #4d6c45;
-  font-size: 28px;
-  width: 38px;
-  height: 38px;
-  margin-right: 10px;
-}
+
 .header-link {
   font-size: 13px;
   font-weight: 700;
@@ -718,11 +707,7 @@ main {
   .brand {
     font-size: 22px;
   }
-  .brand-icon {
-    width: 33px;
-    height: 33px;
-    font-size: 24px;
-  }
+
   .header-link {
     font-size: 11px;
     padding: 9px 12px;

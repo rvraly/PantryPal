@@ -223,9 +223,6 @@ export default function FindRecipes() {
       <header className="site-header">
         <div className="header-inner">
           <a href="#top" className="brand" aria-label="PantryPal home">
-            <span className="brand-icon" aria-hidden="true">
-              ♧
-            </span>{" "}
             Pantry<span>Pal</span>
           </a>
           <nav className="pantry-nav" aria-label="Main navigation">
